@@ -34,7 +34,11 @@
 						</svg>
 						Open AI’s Key
 					</summary>
-					<input type="text" name="openaikey"/>
+					<div class="row">
+						<div class="col">
+							<input type="text" name="openaikey" class="form-control"/>
+						</div>
+					</div>
 				</details>
 				<aside class="card">
 					<form onsubmit="return false" autocomplete="off">
@@ -69,7 +73,19 @@
 			</div>
 		</div>
 	</main>
-
+	<script>
+		window.addEventListener("load", function(){
+			let input = document.querySelector("[name=openaikey]")
+			let keyName = `open-ai-key-1qaz2wsxrfv5t`
+						
+			if(localStorage.getItem(keyName)){
+				input.value = localStorage.getItem(keyName)
+			}
+			input.addEventListener("change", function(){
+				localStorage.setItem(keyName, this.value)
+			})
+		})
+	</script>
 	<script>
 		document.querySelector("form").addEventListener("submit", function () {
 			let q = this.querySelector("[name=s]").value
