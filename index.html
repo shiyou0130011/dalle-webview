@@ -68,7 +68,7 @@
 					if(!e.name){
 						return
 					}
-					if(e.hidden){
+					if(!e.offsetParent){
 						return 
 					}
 					postBody[e.name] = e.value 
