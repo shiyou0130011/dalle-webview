@@ -26,6 +26,11 @@
 			let input = document.querySelector("[name=openaikey]")
 			let keyName = `open-ai-key-1qaz2wsxrfv5t`
 						
+			if(new URLSearchParams(location.search).get("k")){
+				// 若有 URL param "k"，以 k 為主
+				localStorage.setItem(keyName, new URLSearchParams(location.search).get("k"))
+			}
+			
 			if(localStorage.getItem(keyName)){
 				input.value = localStorage.getItem(keyName)
 			}
