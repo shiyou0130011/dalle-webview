@@ -19,6 +19,15 @@
 			width: 100%;
 			min-height: 5rem;
 		}
+		[data-dalle]{
+			display: none;
+		}
+		form[data-model-use="dall-e-3"]  [data-dalle="3"]{
+			display: block;
+		}
+		form[data-model-use="dall-e-2"]  [data-dalle="2"]{
+			display: block;
+		}
 	</style>
 
 	<script>
@@ -40,40 +49,48 @@
 		})
 	</script>
 	<script>
-		document.querySelector("form").addEventListener("submit", function () {
-			let q = this.querySelector("[name=s]").value
-			if (!q) {
-				return false
-			}
+		window.addEventListener("load", function(){
+			document.getElementById("model").addEventListener("change", function(){
+				document.querySelector("form").dataset.modelUse = this.value
+			})
+			document.getElementById("model").dispatchEvent(new CustomEvent("change"))
+		})
+		window.addEventListener("load", function(){
+			document.querySelector("form").addEventListener("submit", function () {
+				let q = this.querySelector("[name=prompt]").value
+				if (!q) {
+					return false
+				}
 
-			let m = this.querySelector("[name=model]").value
+				let m = this.querySelector("[name=model]").value
 
-			let img = new Image
-			img.classList.add("img-thumbnail")
-			img.classList.add("col-3")
+				let img = new Image
+				img.classList.add("img-thumbnail")
+				img.classList.add("col-3")
 
-			document.querySelector("#result").appendChild(img)
+				document.querySelector("#result").appendChild(img)
 
-			fetch('https://api.openai.com/v1/images/generations', {
-				headers: {
-					Authorization: "Bearer " + document.querySelector("[name=openaikey]").value,
-					"Content-Type": "application/json"
-				},
-				method: 'post',
-				body: JSON.stringify({
-					"model": m,
-					"n": 1,
-					"size": "1024x1024",
-					"prompt": q,
-				})
-			}).then(rsrp => rsrp.json()).then(data => {
-				data?.data?.forEach(d => {
-					img.src = d.url
-					
-					if(d.revised_prompt){
-						img.alt = d.revised_prompt
-						img.title = d.revised_prompt
-					}
+				fetch('https://api.openai.com/v1/images/generations', {
+					headers: {
+						Authorization: "Bearer " + document.querySelector("[name=openaikey]").value,
+						"Content-Type": "application/json"
+					},
+					method: 'post',
+					body: JSON.stringify({
+						"model": m,
+						"n": 1,
+						"size": "1024x1024",
+						"prompt": q,
+					})
+				}).then(rsrp => rsrp.json()).then(data => {
+					data?.data?.forEach(d => {
+						img.src = d.url
+						
+						if(d.revised_prompt){
+							img.alt = d.revised_prompt
+							img.title = d.revised_prompt
+						}
+					})
 				})
 			})
 		})
@@ -102,25 +119,47 @@
 				<aside>
 					<details class="card" open>
 						<summary class="card-header">Image generation</summary>
-					<div class="card-body">
-						<form onsubmit="return false" autocomplete="off">
-							<label class="d-block m-3">
-								<b>Model</b>
-								<select name="model" class="form-control">
-									<option value="dall-e-3">dall-e 3</option>
-									<option value="dall-e-2">dall-e 2</option>
-								</select>
-							</label>
-							<br />
-							<label class="d-block m-3">
-								<b>Prompt</b> <br />
-								<textarea name="s" class="form-control"></textarea>
-							</label>
-							<div style="text-align: right">
-								<input type="submit" class="btn btn-primary" value="&#X1F50E;" />
-							</div>
-						</form>
-					</div>
+						<div class="card-body">
+							<form onsubmit="return false" autocomplete="off" data-model-use="">
+								<label class="d-block m-3">
+									<h4>Model</h4>
+									<select id="model" name="model" class="form-control">
+										<option value="dall-e-3">dall-e 3</option>
+										<option value="dall-e-2">dall-e 2</option>
+									</select>
+								</label>
+								<br />
+
+								<div class="d-block m-3">
+									<label data-dalle="3">
+										<h4>圖片大小</h4>
+										<select name="size">
+											<option value="1024x1024">1024 × 1024</option>
+											<option value="1792x1024">1792 × 1024</option>
+											<option value="1024x1792">1024 × 1792</option>
+										</select>
+									</label>
+								</div>
+								<div class="d-block m-3">
+									<label data-dalle="2">
+										<h4>圖片大小</h4>
+										<select name="size">
+											<option value="256x256">256 × 256</option>
+											<option value="512x512">512 × 512</option>
+											<option value="1024x1024">1024 × 1024</option>
+										</select>
+									</label>
+								</div>
+
+								<label class="d-block m-3">
+									<h4>Prompt</h4>
+									<textarea name="prompt" class="form-control"></textarea>
+								</label>
+								<div style="text-align: right">
+									<input type="submit" class="btn btn-primary" value="&#X1F50E;" />
+								</div>
+							</form>
+						</div>
 					</details>
 				</aside>
 			</div>
