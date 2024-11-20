@@ -57,12 +57,22 @@
 		})
 		window.addEventListener("load", function(){
 			document.querySelector("form").addEventListener("submit", function () {
-				let q = this.querySelector("[name=prompt]").value
-				if (!q) {
+				if (!this.querySelector("[name=prompt]").value) {
 					return false
 				}
 
-				let m = this.querySelector("[name=model]").value
+				let postBody = {
+					n: 1
+				}
+				this.querySelectorAll("select, textarea, input").forEach(function(e){
+					if(!e.name){
+						return
+					}
+					if(e.hidden){
+						return 
+					}
+					postBody[e.name] = e.value 
+				})
 
 				let img = new Image
 				img.classList.add("img-thumbnail")
@@ -76,12 +86,7 @@
 						"Content-Type": "application/json"
 					},
 					method: 'post',
-					body: JSON.stringify({
-						"model": m,
-						"n": 1,
-						"size": "1024x1024",
-						"prompt": q,
-					})
+					body: JSON.stringify(postBody)
 				}).then(rsrp => rsrp.json()).then(data => {
 					data?.data?.forEach(d => {
 						img.src = d.url
