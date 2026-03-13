@@ -28,6 +28,9 @@
 		form[data-model-use="dall-e-2"]  [data-dalle="2"]{
 			display: block;
 		}
+		form[data-model-use~="gpt"]  [data-dalle]{
+			display: none;
+		}
 	</style>
 
 	<script>
@@ -131,6 +134,9 @@
 									<select id="model" name="model" class="form-control">
 										<option value="dall-e-3">dall-e 3</option>
 										<option value="dall-e-2">dall-e 2</option>
+										<option value="gpt-image-1">GPT image 1</option>
+										<option value="gpt-image-1-mini">GPT image 1 mini</option>
+										<option value="gpt-image-1.5">GPT image 1.5</option>
 									</select>
 								</label>
 								<br />
