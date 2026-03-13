@@ -60,7 +60,8 @@
 		})
 		window.addEventListener("load", function(){
 			document.querySelector("form").addEventListener("submit", function () {
-				if (!this.querySelector("[name=prompt]").value) {
+				const prompt = this.querySelector("[name=prompt]").value
+				if (!prompt) {
 					return false
 				}
 
@@ -92,11 +93,20 @@
 					body: JSON.stringify(postBody)
 				}).then(rsrp => rsrp.json()).then(data => {
 					data?.data?.forEach(d => {
-						img.src = d.url
+						if (d.url) {
+							// Dall-E 的格式
+							img.src = d.url
+						}else if(d.b64_json){
+							// GPT 的格式
+							img.src = "data:image/png;base64," + d.b64_json
+						}						
 						
 						if(d.revised_prompt){
 							img.alt = d.revised_prompt
 							img.title = d.revised_prompt
+						}else{
+							img.alt = prompt
+							img.title = prompt
 						}
 					})
 				})
