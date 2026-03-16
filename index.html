@@ -48,6 +48,9 @@
 			}
 			input.addEventListener("change", function(){
 				localStorage.setItem(keyName, this.value)
+				let obj = {}
+				obj[keyName] = this.value
+				history.replaceState(history.state, null, "?" + new URLSearchParams(obj))
 			})
 		})
 	</script>
