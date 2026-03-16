@@ -32,7 +32,7 @@
 			display: block;
 		}
 	</style>
-
+	<script src="./openai-api.js"></script>
 	<script>
 		window.addEventListener("load", function(){
 			let input = document.querySelector("[name=openaikey]")
@@ -91,25 +91,7 @@
 					},
 					method: 'post',
 					body: JSON.stringify(postBody)
-				}).then(rsrp => rsrp.json()).then(data => {
-					data?.data?.forEach(d => {
-						if (d.url) {
-							// Dall-E 的格式
-							img.src = d.url
-						}else if(d.b64_json){
-							// GPT 的格式
-							img.src = "data:image/png;base64," + d.b64_json
-						}						
-						
-						if(d.revised_prompt){
-							img.alt = d.revised_prompt
-							img.title = d.revised_prompt
-						}else{
-							img.alt = prompt
-							img.title = prompt
-						}
-					})
-				})
+				}).then(rsrp => rsrp.json()).then(data => handleOpenAIAPIResonse(img, data))
 			})
 		})
 	</script>
