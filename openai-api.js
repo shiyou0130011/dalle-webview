@@ -5,7 +5,9 @@ function handleOpenAIAPIResonse(/** {HTMLImageElement} */img, data){
 			img.src = d.url
 		}else if(d.b64_json){
 			// GPT 的格式
-			img.src = "data:image/png;base64," + d.b64_json
+			let blob = base64toBlob(d.b64_json, "image/png")
+
+			img.src = URL.createObjectURL(blob)
 		}						
 		
 		if(d.revised_prompt){
